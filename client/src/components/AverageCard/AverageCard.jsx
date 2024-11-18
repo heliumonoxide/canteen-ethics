@@ -9,7 +9,7 @@ const AverageCard = () => {
     const fetchAverage = async () => {
       try {
         // Assuming this is the correct endpoint
-        const response = await fetch('https://canteen-ethics-in1ysoesj-bryans-projects-ff8b0266.vercel.app/api/average');
+        const response = await fetch('https://canteen-ethics-api.vercel.app/api/average');
         if (!response.ok) throw new Error('Failed to fetch data');
         const data = await response.json();
         setAverage(data.average); // Assuming API response format is { average: <number> }
