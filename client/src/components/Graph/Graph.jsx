@@ -98,7 +98,7 @@ const Graph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/violation-result');
+        const response = await fetch('https://canteen-ethics-in1ysoesj-bryans-projects-ff8b0266.vercel.app/api/violation-result');
         const data = await response.json();
 
         // Ensure we have an array
