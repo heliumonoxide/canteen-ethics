@@ -1,0 +1,36 @@
+# Base image
+FROM python:3.11.4
+
+# Working directory
+WORKDIR /app
+
+# Install required system libraries
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgl1-mesa-glx \
+    libglib2.0-0 \
+    tzdata \
+    supervisor && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Set the timezone to Jakarta
+ENV TZ=Asia/Jakarta
+ENV PYTHON_SETUPTOOLS_VERSION=75.6.0
+
+# Ensure Supervisor directories exist
+RUN mkdir -p /var/log/supervisor /var/run/supervisor /app/logs && chmod -R 777 /app/logs
+
+# Copy project files into the container
+COPY . /app
+
+# Install Python dependencies
+RUN pip install --default-timeout=10000 -r requirements.txt
+
+RUN pip install --upgrade 'setuptools>=70.0.0'
+
+RUN pip install --upgrade pip
+
+# Copy Supervisor configuration
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+
+# Command to start Supervisor
+CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
