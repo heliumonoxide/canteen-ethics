@@ -1,0 +1,13 @@
+venv/
+env/
+Scripts/
+Lib/
+Include/
+*.tar
+*.pt
+tracking_state.json
+__pycache__/
+# Create virtual environment by running this command:
+# python -m venv venv
+# or python -m venv env
+# to create a new environment folder called venv/env and then install the requirements inside of the virtual env.
