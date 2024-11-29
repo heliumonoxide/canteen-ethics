@@ -34,3 +34,17 @@ COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 # Command to start Supervisor
 CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+
+# docker load -i yolov5-ethics-monitoring.tar
+# docker run -d -v /home/hazel/esp_images:/app/data/images yolov5-project-canteen-ethics-supervisor-v11-final
+# docker exec -it d8f90716b319 /bin/bash
+# supervisorctl status
+# supervisorctl
+# tail -f scheduler // If you want to check the log of scheduler_docker.py
+# tail -f watch_file // If you want to check the log of watch_file_docker.py
+
+# if you want to get out, just do:
+    # exit
+    # quit
+    # ctrl + c
+#  One of them will do
