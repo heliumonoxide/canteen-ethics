@@ -1,0 +1,26 @@
+Using command:
+
+sudo nano /etc/ssh/sshd_config
+
+Set into this setting:
+
+Include /etc/ssh/sshd_config.d/*.conf
+PermitRootLogin no
+PasswordAuthentication yes
+ChallengeResponseAuthentication no
+PermitRootLogin no
+UserPAM yes
+X11Forwarding yes
+PrintMotd no
+AcceptEnv LANG LC_*
+Subsystem sftp /usr/lib/openssh/sftp-server
+
+ClientAliveInternal 120
+
+After done, click:
+ctrl X
+Y
+Press enter
+
+and run this command:
+sudo systemctl restart ssh
