@@ -1,0 +1,77 @@
+Firstly. Note that docker configuration on GCP WILL MESS UP your iptables then FTP client WILL NOT ABLE TO CONNECT if the docker config set as default. You need to do some step shown below:
+1. You need to stop docker first by command:
+sudo systemctl stop docker
+2. Once Docker is stopped, you can follow the steps to flush all iptables rules:
+sudo iptables -F
+sudo iptables -X
+sudo iptables -t nat -F
+sudo iptables -t nat -X
+sudo iptables -t mangle -F
+sudo iptables -t mangle -X
+sudo iptables -t raw -F
+sudo iptables -t raw -X
+3. You need to add a rule in docker config so docker won't mess with your iptables by command:
+sudo nano /etc/docker/daemon.json
+
+then add:
+{
+  "iptables": false // this is the one that needed to be added
+  "runtimes": {something} // just for positioning information
+}
+
+4. If you start docker and run the python now, it will make an error of google.api_core.exceptions.DeadlineExceeded: 504 Deadline Exceeded. That's why you need to add manually docker ip rules to iptables. Heres how:
+ip a (Look for an interface named docker0 to ensure primary network interface for external communication whether it is ens5 or eth0)
+docker network inspect bridge (you can use this command to see subnet of docker0)
+ 
+sudo iptables -I FORWARD -i docker0 -o ens5 -j ACCEPT
+sudo iptables -I FORWARD -i ens5 -o docker0 -j ACCEPT
+sudo iptables -t nat -A POSTROUTING -s 172.17.0.0/16 -j MASQUERADE
+(Please modify based on your subnet and interface for external comm.)
+
+5. Now you have the correct configuration for iptables for both FTP connection and docker. You can test it now, it should run correctly. Now we can make this iptables persistent by using a package name iptables-persistent. Here is the steps:
+sudo mkdir -p /etc/iptables
+sudo -i
+sudo iptables-save > /etc/iptables/rules.v4
+exit
+cat /etc/iptables/rules.v4 (just to verify)
+sudo apt install iptables-persistent
+
+Lastly. You can start your docker again by:
+sudo systemctl start docker
+
+ahh, and don't forget to input tcp connection for FTP (port 21 and 10000-10100 for passive port) by using this command:
+sudo iptables -A INPUT -p tcp --dport 10000:10100 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 21 -j ACCEPT
+
+and make sure the external passive ip address is correct by using this command:
+sudo nano /etc/vsftpd.conf
+
+and change the passive ip address:
+pasv_enable=YES
+pasv_min_port=10000
+pasv_max_port=10100
+pasv_address=<your-server-external-ip>
+
+To save ctrl X -> Y -> press enter.
+
+Restart vsftpd by:
+sudo systemctl restart vsftpd
+
+or
+
+sudo systemctl stop vsftpd
+sudo systemctl start vsftpd
+
+and lastly,
+To allow FTP traffic through the Google Cloud firewall:
+1. Open Google Cloud Console.
+2. Go to VPC Network > Firewall Rules
+3. Add a new firewall rule:
+    - Name: Allow-FTP
+    - Targets: All instances in the network (or specify your VM)
+    - Source IP ranges: 0.0.0.0/0 (or restrict to specific IPs for security)
+    - Protocols and Ports:
+        - TCP: 21, 10000-10100
+4. Save the rule.
+
+Congrats, you have a working VM for FTP and Docker.

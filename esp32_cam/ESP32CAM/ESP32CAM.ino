@@ -65,10 +65,10 @@ const char* password = "warkopds";
 
 // Please make sure your wifi can access internet and have bandwidth since esp will be client of the wifi.
 
-char ftp_server[] = "34.50.84.251";
+char ftp_server[] = "YOUR VM EXTERNAL IP ADDRESS";
 uint16_t ftp_port = 21; // Usually used for FTP connection in port 21
-char ftp_user[]   = "hazel";
-char ftp_pass[]   = "Ngg@kt4uSaya";
+char ftp_user[]   = "YOUR VM USER NAME";
+char ftp_pass[]   = "YOUR VM USER PASSWORD";
 
 ESP32_FTPClient ftp(ftp_server, ftp_port, ftp_user, ftp_pass, 5000, 2); // timeout 5 sec and verbose 2 (for debugging version)
 
