@@ -60,7 +60,7 @@ The project follows a modular architecture divided into **four levels**:
    - **ESP32 CAM**:  
      - Captures images and transfers them to the server via **FTP**.
    - **AI Level**:  
-     - **YOLOv5s AI Model**:
+     - **YOLOv5x AI Model**:
        - Trained to detect specific behaviors and objects in the images.
        - Developed and tested using Docker, ensuring consistent environments for training and deployment.
 
@@ -116,7 +116,7 @@ canteen-ethics-monitoring/
    - ESP32 CAM for image capturing
 
 5. **AI**:  
-   - YOLOv5s for image recognition and behavior analysis
+   - YOLOv5x for image recognition and behavior analysis
    - Docker for consistent development environments
 
 6. **Cloud**:  
